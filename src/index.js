@@ -15,6 +15,8 @@ app.use(express.static(publicDir));
 io.on("connection", (socket) => {
   console.log("socket connected");
 
+  socket.broadcast.emit("print", socket.id);
+
   socket.on("disconnect", () => {
     console.log("socket disconnected");
   });

@@ -2,16 +2,96 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title></title>
-    <link href="css/style.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flag Capture Game</title>
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    Flag Game
-  </body>
+    <div class="container">
+      <h1>Flag Capture Game</h1>
+      <!-- Buttons to toggle dropdowns -->
+      <button class="toggle-btn" onclick="toggleDropdown('create-game')">
+        Create Game
+      </button>
+      <button class="toggle-btn" onclick="toggleDropdown('join-game')">
+        Join Game
+      </button>
 
-  <!--server side js-->
-  <script src="/socket.io/socket.io.js"></script>
-  <!--client-side js-->
-  <script src="./js/game.js"></script>
+      <!-- Create Game Section -->
+      <form class="dropdown create-game" id="create-game" action="./game.html">
+        <h2>Create Game</h2>
+        <label for="create-username">Username:</label>
+        <input
+          type="text"
+          id="create-username"
+          name="userName"
+          placeholder="Enter your username"
+          autocomplete="off"
+          required
+        />
+
+        <label for="room-name">Room Name:</label>
+        <input
+          type="text"
+          id="room-name"
+          name="roomName"
+          placeholder="Enter room name"
+          autocomplete="off"
+          required
+        />
+
+        <label for="num-boxes">No. of Boxes:</label>
+        <select id="num-boxes" name="boxes">
+          <option value="4">4</option>
+          <option value="8">8</option>
+          <option value="16">16</option>
+          <option value="24">24</option>
+          <option value="32">32</option>
+          <option value="40">40</option>
+          <option value="48">48</option>
+        </select>
+        <button class="create-btn">Create</button>
+      </form>
+
+      <!-- Join Game Section -->
+      <form class="dropdown join-game" id="join-game" action="./game.html">
+        <h2>Join Game</h2>
+        <label for="join-username">Username:</label>
+        <input
+          type="text"
+          id="join-username"
+          name="userName"
+          placeholder="Enter your username"
+          autocomplete="off"
+          required
+        />
+        <label for="join-room">Room Name:</label>
+        <input
+          type="text"
+          id="join-room"
+          name="roomName"
+          placeholder="Enter room name"
+          autocomplete="off"
+          required
+        />
+        <button class="join-btn">Join</button>
+      </form>
+    </div>
+
+    <script>
+      function toggleDropdown(sectionId) {
+        const section = document.getElementById(sectionId);
+        const isVisible = section.style.display === "block";
+
+        // Hide all dropdowns first
+        const dropdowns = document.querySelectorAll(".dropdown");
+        dropdowns.forEach((dropdown) => (dropdown.style.display = "none"));
+
+        // Toggle the visibility of the clicked section
+        if (!isVisible) {
+          section.style.display = "block";
+        }
+      }
+    </script>
+  </body>
 </html>

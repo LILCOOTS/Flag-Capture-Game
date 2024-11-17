@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1e1e1e;
+  font-family: Arial, sans-serif;
+}
+
+.game-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Chatbox positioned at the bottom-left corner */
+.chatbox {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 400px;
+  height: 300px;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #ff4500;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #252525;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.chat-form {
+  display: flex;
+  border-top: 1px solid #444;
+}
+
+#chat-input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #444;
+  color: #ffffff;
+  outline: none;
+}
+p {
+  background-color: #444;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  max-width: 80%;
+  transition: background-color 0.3s ease;
+}
+.send-button {
+  padding: 10px;
+  background-color: #ff4500;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.send-button:hover {
+  background-color: #e63900;
+}
+
+.send-button:active {
+  background-color: #cc3300;
+}
+
+.grid-container {
+  display: grid;
+  gap: 15px;
+  background-color: #2d2d2d;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.grid-box {
+  background-color: #ff4500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  width: 6.9rem;
+  height: 6.9rem;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  aspect-ratio: 1 / 1; /* Ensure square boxes */
+  text-align: center;
+  word-wrap: break-word; /* Wrap long words to fit within the box */
+  white-space: normal; /* Allow text to wrap to the next line */
+  overflow: hidden; /* Hide any overflowing content */
+  text-overflow: ellipsis; /* Optionally, add ellipsis for overflow */
+}
+
+.grid-box:hover {
+  background-color: #ff6347;
+}
+
+/* Responsive layout for different screen sizes */
+@media (max-width: 768px) {
+  .chatbox {
+    width: 350px;
+    height: 150px;
+  }
+  .grid-box {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 10px;
+  }
+}

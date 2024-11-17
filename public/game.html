@@ -4,12 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="./css/style2.css" rel="stylesheet" />
   </head>
   <body>
-    Flag Game
+    <div class="game-container">
+      <!-- Chatbox -->
+      <div class="chatbox">
+        <div class="messages" id="chat-messages"></div>
+        <form id="chat-form" class="chat-form">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type a message..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" class="send-button">Send</button>
+        </form>
+      </div>
+
+      <!-- Game grid -->
+      <div class="grid-container" id="game-grid"></div>
+    </div>
   </body>
 
+  <script id="system-message" type="text/html">
+    <p class="system">{{message}}</p>
+  </script>
+
+  <script id="com-message" type="text/html">
+    <p class="msg">{{message}}</p>
+  </script>
+
+  <!-- dynamic rendering of template -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
   <!-- query parser -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
   <!--server side js-->

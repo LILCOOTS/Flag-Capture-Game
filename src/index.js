@@ -12,12 +12,59 @@ const io = socketio(server);
 const publicDir = path.join(__dirname, "../public/");
 app.use(express.static(publicDir));
 
+let roomInfo = {};
+
 io.on("connection", (socket) => {
   console.log("socket connected");
 
-  socket.broadcast.emit("print", socket.id);
+  socket.on("roomJoin", ({ userName, roomName, boxes }) => {
+    socket.userName = userName;
+    socket.roomName = roomName;
+
+    socket.join(socket.roomName);
+
+    if (!roomInfo[`${socket.roomName}`]) {
+      if (boxes) {
+        roomInfo[`${socket.roomName}`] = {
+          userName: [],
+          roomName: socket.roomName,
+          boxes: boxes,
+        };
+      } else {
+        console.log("room does not exist");
+      }
+    }
+
+    roomInfo[`${socket.roomName}`].userName.push(socket.userName);
+
+    socket.broadcast.to(socket.roomName).emit("print", roomInfo);
+    socket.emit("createGame", roomInfo[`${socket.roomName}`]);
+
+    socket.emit("systemMsg", `Welcome ${socket.userName}`);
+    socket.broadcast
+      .to(socket.roomName)
+      .emit("systemMsg", `${socket.userName} has joined!`);
+  });
+
+  socket.on("sendMsg", (msg) => {
+    io.emit("systemMsg", `${socket.userName}: ${msg}`);
+  });
 
   socket.on("disconnect", () => {
+    if (
+      roomInfo[`${socket.roomName}`] &&
+      roomInfo[`${socket.roomName}`].userName
+    ) {
+      console.log(roomInfo[`${socket.roomName}`].userName);
+      roomInfo[`${socket.roomName}`].userName = roomInfo[
+        `${socket.roomName}`
+      ].userName.filter((name) => name !== socket.userName);
+
+      if (roomInfo[`${socket.roomName}`].userName.length === 0) {
+        delete roomInfo[`${socket.roomName}`];
+      }
+    }
+    socket.broadcast.to(socket.roomName).emit("print", roomInfo);
     console.log("socket disconnected");
   });
 });

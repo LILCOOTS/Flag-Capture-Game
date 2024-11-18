@@ -50,6 +50,11 @@ io.on("connection", (socket) => {
     io.emit("systemMsg", `${socket.userName}: ${msg}`);
   });
 
+  socket.on("changeColor", (boxIndex) => {
+    console.log(boxIndex);
+    socket.broadcast.to(socket.roomName).emit("change", boxIndex);
+  });
+
   socket.on("disconnect", () => {
     if (
       roomInfo[`${socket.roomName}`] &&

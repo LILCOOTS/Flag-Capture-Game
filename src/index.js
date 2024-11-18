@@ -13,6 +13,7 @@ const publicDir = path.join(__dirname, "../public/");
 app.use(express.static(publicDir));
 
 let roomInfo = {};
+let colors = ["red", "blue", "darkgoldenrod", "green"];
 
 io.on("connection", (socket) => {
   console.log("socket connected");
@@ -20,8 +21,6 @@ io.on("connection", (socket) => {
   socket.on("roomJoin", ({ userName, roomName, boxes }) => {
     socket.userName = userName;
     socket.roomName = roomName;
-
-    socket.join(socket.roomName);
 
     if (!roomInfo[`${socket.roomName}`]) {
       if (boxes) {
@@ -34,6 +33,17 @@ io.on("connection", (socket) => {
         console.log("room does not exist");
       }
     }
+
+    if (roomInfo[`${socket.roomName}`].userName.length >= 4) {
+      console.log("room size exceeded");
+      return;
+    }
+
+    const assignedColor =
+      colors[roomInfo[`${socket.roomName}`].userName.length];
+    socket.color = assignedColor;
+
+    socket.join(socket.roomName);
 
     roomInfo[`${socket.roomName}`].userName.push(socket.userName);
 
@@ -50,9 +60,12 @@ io.on("connection", (socket) => {
     io.emit("systemMsg", `${socket.userName}: ${msg}`);
   });
 
-  socket.on("changeColor", (boxIndex) => {
+  socket.on("changeColor", (boxIndex, name) => {
     console.log(boxIndex);
-    socket.broadcast.to(socket.roomName).emit("change", boxIndex);
+    socket.emit("change", boxIndex, socket.userName, socket.color);
+    socket.broadcast
+      .to(socket.roomName)
+      .emit("change", boxIndex, name, socket.color);
   });
 
   socket.on("disconnect", () => {

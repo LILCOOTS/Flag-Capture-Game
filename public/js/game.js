@@ -25,9 +25,10 @@ socket.on("systemMsg", (msg) => {
   chat_messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.on("change", (clickedBox) => {
+socket.on("change", (clickedBox, name, color) => {
   const box = document.querySelector(`[data-index="${clickedBox}"]`);
-  box.style.backgroundColor = "blue";
+  box.style.backgroundColor = color;
+  box.innerText = name;
 });
 
 socket.on("print", (roomInfo) => {
@@ -63,9 +64,9 @@ function generateGrid(boxes) {
   for (let i = 0; i < boxes; i++) {
     const box = document.createElement("div");
     box.classList.add("grid-box");
-    box.textContent = "1";
+    box.textContent = "Play";
     box.setAttribute("data-index", i); //to target each grid
-    box.style.backgroundColor = "#ff4500";
+    box.style.backgroundColor = "grey";
     gridContainer.appendChild(box);
   }
 }
@@ -77,9 +78,7 @@ gridContainer.addEventListener("click", (event) => {
   if (clickedBox.classList.contains("grid-box")) {
     // Perform any action you want on the clicked box
     const boxIndex = clickedBox.getAttribute("data-index");
-    console.log(`Box ${boxIndex} clicked`);
-    clickedBox.style.backgroundColor = "blue";
 
-    socket.emit("changeColor", boxIndex);
+    socket.emit("changeColor", boxIndex, userName);
   }
 });

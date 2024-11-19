@@ -5,44 +5,155 @@
 }
 
 body {
-  overflow-y: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  overflow: hidden;
   background-color: #1e1e1e;
   font-family: Arial, sans-serif;
-}
-
-.game-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  color: #fff;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Chatbox positioned at the bottom-left corner */
-.chatbox {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  width: 400px;
-  height: 350px;
-  z-index: 0;
+.game-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Sidebar on the left side */
+/* Sidebar styling */
+.sidebar {
+  width: 300px;
+  background-color: #2d2d2d;
+  border-right: 2px solid #ff4500;
+  padding: 0px;
   display: flex;
   flex-direction: column;
+  height: 40vh;
   border: 2px solid #ff4500;
   border-radius: 10px;
   padding: 10px;
+  margin: 0px 0px 0 10px;
+}
+
+.player-list {
+  height: 57vh;
+  margin-top: 15px;
+}
+
+.sidebar h2 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #fff;
+  border-bottom: 2px solid #ff4500;
+  font-size: 1.75em;
+}
+
+.player-list {
+  list-style: none;
+  padding: 0;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #3a3a3a;
+  margin-bottom: 20px;
+  padding: 15px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 21px;
+}
+
+/* Status indicator circles */
+.status-indicator {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.active {
+  background-color: #00ff00; /* Green for active */
+}
+
+/* Mic icon placeholder */
+.mic-icon {
+  margin-left: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #ff4500;
+}
+
+/* Hover effect for mic icon */
+.mic-icon:hover {
+  color: #e63900;
+}
+
+/* Game container in the center */
+.game-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1e1e1e;
+}
+
+.grid-container {
+  display: grid;
+  gap: 15px;
+  padding: 20px;
+  background-color: #2d2d2d;
+  border-radius: 10px;
+}
+
+/* Grid boxes */
+.grid-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  width: 6.9rem;
+  height: 6.9rem;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: hidden;
+}
+
+.grid-box:hover {
+  background-color: #ff6347;
+}
+
+/* Chatbox on the right side */
+.chatbox {
+  width: 325px;
   background-color: #252525;
+  border-left: 2px solid #ff4500;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 10px;
+  border: 2px solid #ff4500;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0px 10px 0 0;
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
-  color: #fff;
   margin-bottom: 10px;
 }
 
@@ -60,6 +171,7 @@ body {
   color: #ffffff;
   outline: none;
 }
+
 p {
   background-color: #444;
   margin: 10px;
@@ -69,9 +181,8 @@ p {
   font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;
-  max-width: 80%;
-  transition: background-color 0.3s ease;
 }
+
 .send-button {
   padding: 10px;
   background-color: #ff4500;
@@ -89,47 +200,18 @@ p {
   background-color: #cc3300;
 }
 
-.grid-container {
-  display: grid;
-  gap: 15px;
-  background-color: #2d2d2d;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.grid-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  width: 6.9rem;
-  height: 6.9rem;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  aspect-ratio: 1 / 1; /* Ensure square boxes */
-  text-align: center;
-  word-wrap: break-word; /* Wrap long words to fit within the box */
-  white-space: normal; /* Allow text to wrap to the next line */
-  overflow: hidden; /* Hide any overflowing content */
-  text-overflow: ellipsis; /* Optionally, add ellipsis for overflow */
-}
-
-.grid-box:hover {
-  background-color: #ff6347;
-}
-
-/* Responsive layout for different screen sizes */
+/* Responsive layout for smaller screens */
 @media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
   .chatbox {
-    width: 350px;
-    height: 150px;
+    width: 100%;
+    height: 200px;
   }
   .grid-box {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 10px;
+    width: 4rem;
+    height: 4rem;
+    font-size: 12px;
   }
 }

@@ -14,6 +14,7 @@ app.use(express.static(publicDir));
 
 let roomInfo = {};
 let colors = ["red", "blue", "darkgoldenrod", "green"];
+let boxInfo;
 
 io.on("connection", (socket) => {
   console.log("socket connected");
@@ -29,12 +30,16 @@ io.on("connection", (socket) => {
           roomName: socket.roomName,
           boxes: boxes,
         };
+        boxInfo = new Array(boxes);
       } else {
         console.log("room does not exist");
       }
     }
 
-    if (roomInfo[`${socket.roomName}`].userName.length >= 4) {
+    if (
+      roomInfo[`${socket.roomName}`] &&
+      roomInfo[`${socket.roomName}`].userName.length >= 4
+    ) {
       console.log("room size exceeded");
       return;
     }
@@ -47,8 +52,12 @@ io.on("connection", (socket) => {
 
     roomInfo[`${socket.roomName}`].userName.push(socket.userName);
 
-    socket.broadcast.to(socket.roomName).emit("print", roomInfo);
     socket.emit("createGame", roomInfo[`${socket.roomName}`]);
+
+    io.to(socket.roomName).emit(
+      "displayPlayer",
+      roomInfo[`${socket.roomName}`].userName,
+    );
 
     socket.emit("systemMsg", `Welcome ${socket.userName}`);
     socket.broadcast
@@ -60,12 +69,38 @@ io.on("connection", (socket) => {
     io.emit("systemMsg", `${socket.userName}: ${msg}`);
   });
 
+  socket.on("startGame", () => {
+    setTimeout(() => {
+      const winner = (arr) => {
+        let hm = {};
+        let maxCount = 0;
+        let res;
+
+        for (let x of arr) {
+          hm[x] = (hm[x] || 0) + 1;
+
+          if (hm[x] > maxCount) {
+            maxCount = hm[x];
+            res = x;
+          }
+        }
+
+        return res;
+      };
+      console.log(winner(boxInfo));
+    }, 60000);
+  });
+
   socket.on("changeColor", (boxIndex, name) => {
     console.log(boxIndex);
     socket.emit("change", boxIndex, socket.userName, socket.color);
     socket.broadcast
       .to(socket.roomName)
       .emit("change", boxIndex, name, socket.color);
+  });
+
+  socket.on("changeBoxInfo", (boxIndex, userName) => {
+    boxInfo[boxIndex] = userName;
   });
 
   socket.on("disconnect", () => {
@@ -82,8 +117,15 @@ io.on("connection", (socket) => {
         delete roomInfo[`${socket.roomName}`];
       }
     }
-    socket.broadcast.to(socket.roomName).emit("print", roomInfo);
-    console.log("socket disconnected");
+    if (roomInfo[`${socket.roomName}`]) {
+      io.to(socket.roomName).emit(
+        "displayPlayer",
+        roomInfo[`${socket.roomName}`].userName,
+      );
+    }
+    socket.broadcast
+      .to(socket.roomName)
+      .emit("systemMsg", `${socket.userName} has disconnected!`);
   });
 });
 

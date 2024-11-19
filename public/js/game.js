@@ -4,9 +4,13 @@ const chat_messages = document.getElementById("chat-messages");
 const input = document.getElementById("chat-input");
 const form = document.getElementById("chat-form");
 const gridContainer = document.getElementById("game-grid");
+const sidebar = document.getElementById("sidebar-player-list");
+const startBtn = document.getElementById("start");
 
 const system_message_template =
   document.getElementById("system-message").innerHTML;
+
+const player_tag_template = document.getElementById("player-tag").innerHTML;
 
 const { userName, roomName, boxes } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
@@ -25,16 +29,17 @@ socket.on("systemMsg", (msg) => {
   chat_messages.insertAdjacentHTML("beforeend", html);
 });
 
+socket.on("displayPlayer", (info) => {
+  const html = Mustache.render(player_tag_template, {
+    users: info,
+  });
+  sidebar.innerHTML = html;
+});
+
 socket.on("change", (clickedBox, name, color) => {
   const box = document.querySelector(`[data-index="${clickedBox}"]`);
   box.style.backgroundColor = color;
   box.innerText = name;
-});
-
-socket.on("print", (roomInfo) => {
-  console.log(roomInfo[`${roomName}`].userName);
-  console.log(roomInfo[`${roomName}`].roomName);
-  console.log(roomInfo[`${roomName}`].boxes);
 });
 
 form.addEventListener("submit", (e) => {
@@ -70,6 +75,12 @@ function generateGrid(boxes) {
     gridContainer.appendChild(box);
   }
 }
+
+startBtn.addEventListener("click", () => {
+  console.log("clicked");
+  socket.emit("startGame");
+});
+
 gridContainer.addEventListener("click", (event) => {
   const clickedBox = event.target;
   console.log(clickedBox);
@@ -80,5 +91,6 @@ gridContainer.addEventListener("click", (event) => {
     const boxIndex = clickedBox.getAttribute("data-index");
 
     socket.emit("changeColor", boxIndex, userName);
+    socket.emit("changeBoxInfo", boxIndex, userName);
   }
 });

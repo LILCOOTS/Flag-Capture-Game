@@ -7,8 +7,21 @@
     <link href="./css/style2.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="game-container">
-      <!-- Chatbox -->
+    <div class="game-layout">
+      <!-- Sidebar for displaying player status -->
+      <div class="">
+        <div class="sidebar game" id="game-box">
+          <button type="button" id="start">Click</button>
+        </div>
+        <div class="sidebar player-list" id="sidebar-player-list"></div>
+      </div>
+
+      <div class="game-container">
+        <!-- Game grid -->
+        <div class="grid-container" id="game-grid"></div>
+      </div>
+
+      <!-- Chatbox on the right side -->
       <div class="chatbox">
         <div class="messages" id="chat-messages"></div>
         <form id="chat-form" class="chat-form">
@@ -22,9 +35,6 @@
           <button type="submit" class="send-button">Send</button>
         </form>
       </div>
-
-      <!-- Game grid -->
-      <div class="grid-container" id="game-grid"></div>
     </div>
   </body>
 
@@ -34,6 +44,19 @@
 
   <script id="com-message" type="text/html">
     <p class="msg">{{message}}</p>
+  </script>
+
+  <script id="player-tag" type="text/html">
+    <h2>Players</h2>
+    <ul class="player-list">
+      {{#users}}
+      <li class="player">
+        <span class="status-indicator active"></span>
+        {{.}}
+        <span class="mic-icon">🎤</span>
+      </li>
+      {{/users}}
+    </ul>
   </script>
 
   <!-- dynamic rendering of template -->

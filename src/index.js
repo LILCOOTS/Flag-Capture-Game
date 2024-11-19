@@ -66,12 +66,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMsg", (msg) => {
-    io.emit("systemMsg", `${socket.userName}: ${msg}`);
+    io.to(socket.roomName).emit("systemMsg", `${socket.userName}: ${msg}`);
   });
 
   socket.on("startGame", () => {
     setTimeout(() => {
-      const winner = (arr) => {
+      const winnerAlgo = (arr) => {
         let hm = {};
         let maxCount = 0;
         let res;
@@ -87,7 +87,9 @@ io.on("connection", (socket) => {
 
         return res;
       };
-      console.log(winner(boxInfo));
+
+      const winner = winnerAlgo(boxInfo);
+      io.to(socket.roomName).emit("systemMsg", `${winner} is the Winner!!!`);
     }, 60000);
   });
 

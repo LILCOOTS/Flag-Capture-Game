@@ -30,12 +30,12 @@ io.on("connection", (socket) => {
           roomName: socket.roomName,
           boxes: boxes,
         };
-        boxInfo = new Array(boxes);
       } else {
         console.log("room does not exist");
       }
     }
 
+    boxInfo = new Array(roomInfo[`${socket.roomName}`].boxes);
     if (
       roomInfo[`${socket.roomName}`] &&
       roomInfo[`${socket.roomName}`].userName.length >= 4
@@ -90,7 +90,10 @@ io.on("connection", (socket) => {
 
       const winner = winnerAlgo(boxInfo);
       io.to(socket.roomName).emit("systemMsg", `${winner} is the Winner!!!`);
-    }, 60000);
+      io.to(socket.roomName).emit("createGame", roomInfo[`${socket.roomName}`]);
+      boxInfo = new Array(roomInfo[`${socket.roomName}`].boxes);
+    }, 39000);
+    io.to(socket.roomName).emit("startTimer");
   });
 
   socket.on("changeColor", (boxIndex, name) => {

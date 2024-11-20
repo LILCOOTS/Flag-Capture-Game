@@ -11,12 +11,19 @@
       <!-- Sidebar for displaying player status -->
       <div class="">
         <div class="sidebar game" id="game-box">
-          <button type="button" id="start">Click</button>
+          <div class="btn-div">
+            <button type="button" class="btn start" id="start">Start</button>
+            <button type="button" class="btn leave" id="leave">Leave</button>
+          </div>
+          <div class="timer">
+            <h1 class="time" id="time">40</h1>
+          </div>
         </div>
         <div class="sidebar player-list" id="sidebar-player-list"></div>
       </div>
 
       <div class="game-container">
+        <div class="grid-overlay" id="grid-overlay"></div>
         <!-- Game grid -->
         <div class="grid-container" id="game-grid"></div>
       </div>
